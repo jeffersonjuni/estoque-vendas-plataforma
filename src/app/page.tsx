@@ -28,7 +28,11 @@ export default function Home() {
         <PageHeader
           title="Dashboard"
           description="Visualização dos componentes base da plataforma."
-          action={<Button onClick={() => setOpenModal(true)}>Abrir modal</Button>}
+          action={
+            <Button fullWidth onClick={() => setOpenModal(true)}>
+              Abrir modal
+            </Button>
+          }
         />
 
         <div className="grid gap-6 xl:grid-cols-2">
