@@ -1,3 +1,5 @@
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+
 type AppHeaderProps = {
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
@@ -27,6 +29,8 @@ export function AppHeader({
       </div>
 
       <div className="flex items-center gap-3">
+        <ThemeToggle />
+
         <div className="rounded-full bg-muted px-4 py-2 text-sm text-muted-foreground">
           Jefferson Junior
         </div>
