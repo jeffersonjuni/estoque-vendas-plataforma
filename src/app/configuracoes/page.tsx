@@ -8,7 +8,7 @@ export default function RelatoriosPage() {
     <AppShell>
       <PageContainer>
         <PageHeader
-          title="Relatórios"
+          title="Configurações"
           description="Acompanhe indicadores e dados consolidados do sistema."
         />
 
