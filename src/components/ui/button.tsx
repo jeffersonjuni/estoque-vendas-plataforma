@@ -34,7 +34,7 @@ export function Button({
           'h-10 px-4 text-sm': size === 'md',
           'h-11 px-6 text-base': size === 'lg',
 
-          'w-full sm:w-auto': fullWidth,
+          'w-full': fullWidth,
         },
         className
       )}
