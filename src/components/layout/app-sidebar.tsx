@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type NavItem = {
   label: string;
@@ -9,12 +9,12 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/' },
-  { label: 'Produtos', href: '/produtos' },
-  { label: 'Estoque', href: '/estoque' },
-  { label: 'Vendas', href: '/vendas' },
-  { label: 'Relatórios', href: '/relatorios' },
-  { label: 'Configurações', href: '/configuracoes' },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Produtos", href: "/produtos" },
+  { label: "Estoque", href: "/estoque" },
+  { label: "Vendas", href: "/vendas" },
+  { label: "Relatórios", href: "/relatorios" },
+  { label: "Configurações", href: "/configuracoes" },
 ];
 
 type AppSidebarProps = {
@@ -37,8 +37,8 @@ export function AppSidebar({
           onClick={onClose}
           className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
             isOpen
-              ? 'pointer-events-auto opacity-100'
-              : 'pointer-events-none opacity-0'
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
           }`}
         />
       )}
@@ -47,14 +47,14 @@ export function AppSidebar({
         className={`z-50 flex shrink-0 flex-col overflow-hidden border-r border-border bg-card transition-all duration-300 ease-in-out ${
           isMobile
             ? `fixed inset-y-0 left-0 w-64 px-4 py-6 ${
-                isOpen ? 'translate-x-0' : '-translate-x-full'
+                isOpen ? "translate-x-0" : "-translate-x-full"
               }`
-            : `${isOpen ? 'w-64 px-4 py-6' : 'w-0 px-0 py-0'} relative`
+            : `${isOpen ? "w-64 px-4 py-6" : "w-0 px-0 py-0"} relative`
         }`}
       >
         <div
           className={`flex h-full flex-col transition-opacity duration-200 ${
-            isOpen ? 'opacity-100 delay-100' : 'pointer-events-none opacity-0'
+            isOpen ? "opacity-100 delay-100" : "pointer-events-none opacity-0"
           }`}
         >
           <div className="mb-8 whitespace-nowrap">
@@ -80,8 +80,8 @@ export function AppSidebar({
                   }}
                   className={`whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-foreground text-background'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   {item.label}
