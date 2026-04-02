@@ -30,7 +30,11 @@ export const authConfig: NextAuthOptions = {
           return null;
         }
 
-        return user;
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
       },
     }),
   ],
@@ -40,13 +44,15 @@ export const authConfig: NextAuthOptions = {
   },
 
   pages: {
-    signIn: "/login",
+    signIn: "/",
   },
 
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
       }
 
       return token;
@@ -55,6 +61,8 @@ export const authConfig: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name;
+        session.user.email = token.email;
       }
 
       return session;
