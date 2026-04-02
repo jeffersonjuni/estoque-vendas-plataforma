@@ -45,7 +45,7 @@ export function AppHeader({
               <User className="h-4 w-4" />
             </div>
 
-            <div className="max-w-[180px]">
+            <div className="max-w-45">
               <p className="truncate text-sm font-semibold text-foreground">
                 {userName}
               </p>
