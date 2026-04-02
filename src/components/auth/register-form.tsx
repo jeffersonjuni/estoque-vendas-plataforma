@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/ui/loader";
+
+import { PasswordRequirements } from "@/components/auth/password-requirements";
+import { isPasswordStrong } from "@/lib/password-validation";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -30,6 +33,7 @@ export function RegisterForm() {
   });
 
   const [formError, setFormError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   function validateForm() {
@@ -50,13 +54,16 @@ export function RegisterForm() {
     if (!email.trim()) {
       newErrors.email = "Informe seu e-mail.";
       isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Informe um e-mail válido.";
+      isValid = false;
     }
 
     if (!password.trim()) {
       newErrors.password = "Informe sua senha.";
       isValid = false;
-    } else if (password.length < 6) {
-      newErrors.password = "A senha deve ter no mínimo 6 caracteres.";
+    } else if (!isPasswordStrong(password)) {
+      newErrors.password = "A senha não atende aos requisitos mínimos.";
       isValid = false;
     }
 
@@ -80,6 +87,7 @@ export function RegisterForm() {
     try {
       setIsLoading(true);
       setFormError("");
+      setSuccessMessage("");
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -100,7 +108,13 @@ export function RegisterForm() {
         return;
       }
 
-      router.push("/");
+      setSuccessMessage(
+        "Conta criada com sucesso! Redirecionando para o login..."
+      );
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1800);
     } catch {
       setFormError("Erro inesperado. Tente novamente.");
     } finally {
@@ -111,7 +125,6 @@ export function RegisterForm() {
   return (
     <section className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="grid w-full max-w-6xl gap-8 lg:grid-cols-2">
-        {/* Branding / institucional */}
         <div className="hidden flex-col justify-center lg:flex">
           <div className="space-y-6">
             <Badge variant="outline" className="w-fit">
@@ -133,10 +146,10 @@ export function RegisterForm() {
               <Card className="bg-background">
                 <CardContent className="space-y-2 p-4">
                   <p className="text-sm font-semibold text-foreground">
-                    Cadastro rápido
+                    Cadastro seguro
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Crie sua conta em poucos passos com segurança.
+                    Regras de senha reforçadas para proteger o acesso.
                   </p>
                 </CardContent>
               </Card>
@@ -144,10 +157,10 @@ export function RegisterForm() {
               <Card className="bg-background">
                 <CardContent className="space-y-2 p-4">
                   <p className="text-sm font-semibold text-foreground">
-                    Acesso seguro
+                    Acesso profissional
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Suas credenciais protegidas com autenticação segura.
+                    Estrutura pronta para uso real e evolução da plataforma.
                   </p>
                 </CardContent>
               </Card>
@@ -155,7 +168,6 @@ export function RegisterForm() {
           </div>
         </div>
 
-        {/* Formulário */}
         <div className="flex items-center justify-center">
           <Card className="w-full max-w-md">
             <CardContent className="p-6 sm:p-8">
@@ -198,31 +210,44 @@ export function RegisterForm() {
                     Senha
                   </label>
 
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Digite sua senha"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      error={errors.password}
-                      disabled={isLoading}
-                      className="pr-12"
-                    />
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Digite sua senha"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        disabled={isLoading}
+                        className="pr-12"
+                        autoComplete="new-password"
+                      />
 
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-3 top-5 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                        aria-label={
+                          showPassword ? "Ocultar senha" : "Mostrar senha"
+                        }
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
+
+                    {errors.password && (
+                      <span className="text-sm text-destructive">
+                        {errors.password}
+                      </span>
+                    )}
                   </div>
                 </div>
+
+                <PasswordRequirements password={password} />
 
                 <div className="space-y-2">
                   <label
@@ -232,39 +257,59 @@ export function RegisterForm() {
                     Confirmar senha
                   </label>
 
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirme sua senha"
-                      value={confirmPassword}
-                      onChange={(event) =>
-                        setConfirmPassword(event.target.value)
-                      }
-                      error={errors.confirmPassword}
-                      disabled={isLoading}
-                      className="pr-12"
-                    />
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirme sua senha"
+                        value={confirmPassword}
+                        onChange={(event) =>
+                          setConfirmPassword(event.target.value)
+                        }
+                        disabled={isLoading}
+                        className="pr-12"
+                        autoComplete="new-password"
+                      />
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword((prev) => !prev)
-                      }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword((prev) => !prev)
+                        }
+                        className="absolute right-3 top-5 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                        aria-label={
+                          showConfirmPassword
+                            ? "Ocultar confirmação de senha"
+                            : "Mostrar confirmação de senha"
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
+
+                    {errors.confirmPassword && (
+                      <span className="text-sm text-destructive">
+                        {errors.confirmPassword}
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 {formError && (
                   <div className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                     {formError}
+                  </div>
+                )}
+
+                {successMessage && (
+                  <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm text-success">
+                    <CheckCircle2 className="h-4 w-4" />
+                    {successMessage}
                   </div>
                 )}
 

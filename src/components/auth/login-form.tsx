@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import Link from 'next/link';
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Loader } from "@/components/ui/loader";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Loader } from '@/components/ui/loader';
 
 export function LoginForm() {
   const router = useRouter();
@@ -154,35 +154,46 @@ export function LoginForm() {
 
                     <Link
                       href="/forgot-password"
-                      className="text-sm font-medium text-primary hover:underline"
+                      className="text-sm font-medium text-primary transition hover:opacity-80 hover:underline"
                     >
                       Esqueci minha senha
                     </Link>
                   </div>
 
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Digite sua senha"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      error={passwordError}
-                      disabled={isLoading}
-                      className="pr-12"
-                    />
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Digite sua senha"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        disabled={isLoading}
+                        className="pr-12"
+                        autoComplete="current-password"
+                      />
 
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-3 top-5 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                        aria-label={
+                          showPassword ? 'Ocultar senha' : 'Mostrar senha'
+                        }
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
+
+                    {passwordError && (
+                      <span className="text-sm text-destructive">
+                        {passwordError}
+                      </span>
+                    )}
                   </div>
                 </div>
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 import { prisma } from "@/lib/prisma";
+import { isPasswordStrong } from "@/lib/password-validation";
 
 export async function POST(req: Request) {
   try {
@@ -10,6 +11,16 @@ export async function POST(req: Request) {
     if (!name || !email || !password) {
       return NextResponse.json(
         { message: "Dados inválidos." },
+        { status: 400 }
+      );
+    }
+
+    if (!isPasswordStrong(password)) {
+      return NextResponse.json(
+        {
+          message:
+            "A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, um número e um caractere especial.",
+        },
         { status: 400 }
       );
     }
@@ -35,8 +46,10 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ message: "Usuário criado com sucesso." });
-  } catch (error) {
+    return NextResponse.json({
+      message: "Usuário criado com sucesso.",
+    });
+  } catch {
     return NextResponse.json(
       { message: "Erro ao criar usuário." },
       { status: 500 }
