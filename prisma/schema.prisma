@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StockMovementType {
+  IN
+  OUT
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -15,51 +20,58 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sales     Sale[]
+  products Product[]
+  sales    Sale[]
 }
 
 model Product {
-  id          String           @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
-  price       Decimal          @db.Decimal(10, 2)
-  stock       Int              @default(0)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-
-  saleItems   SaleItem[]
-  movements   StockMovement[]
-}
-
-model StockMovement {
-  id          String   @id @default(uuid())
-  type        String   // IN | OUT
-  quantity    Int
-  reason      String?
-  productId   String
-  createdAt   DateTime @default(now())
-
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
-
-model Sale {
-  id          String   @id @default(uuid())
+  sku         String?
+  category    String?
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
   userId      String
-  total       Decimal  @db.Decimal(10, 2)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items       SaleItem[]
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  saleItems SaleItem[]
+  movements StockMovement[]
+
+  @@unique([userId, sku])
+}
+
+model StockMovement {
+  id        String            @id @default(uuid())
+  type      StockMovementType
+  quantity  Int
+  reason    String?
+  productId String
+  createdAt DateTime          @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Sale {
+  id        String   @id @default(uuid())
+  userId    String
+  total     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items SaleItem[]
 }
 
 model SaleItem {
-  id          String   @id @default(uuid())
-  saleId      String
-  productId   String
-  quantity    Int
-  price       Decimal  @db.Decimal(10, 2)
+  id        String  @id @default(uuid())
+  saleId    String
+  productId String
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
 
-  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
