@@ -8,3 +8,16 @@ export type ProductInput = {
 };
 
 export type UpdateProductInput = Partial<ProductInput>;
+
+export type Product = {
+  id: string;
+  name: string;
+  description: string | null;
+  sku: string | null;
+  category: string | null;
+  price: string;
+  stock: number;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+};
