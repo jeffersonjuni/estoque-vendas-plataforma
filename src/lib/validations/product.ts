@@ -8,11 +8,12 @@ export const createProductSchema = z.object({
     .max(100, "O nome do produto deve ter no máximo 100 caracteres."),
 
   description: z
-    .string()
-    .trim()
-    .max(500, "A descrição deve ter no máximo 500 caracteres.")
-    .optional()
-    .or(z.literal("")),
+  .string()
+  .trim()
+  .max(500, "A descrição deve ter no máximo 500 caracteres.")
+  .optional()
+  .or(z.literal(""))
+  .transform((val) => (val === "" ? undefined : val)),
 
   sku: z
     .string()

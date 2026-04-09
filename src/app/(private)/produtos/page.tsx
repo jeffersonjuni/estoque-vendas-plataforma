@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
 
-import { ProductList } from "@/components/products/product-list";
+import { ProductList } from '@/components/products/product-list';
 
 export default function ProdutosPage() {
   return (
@@ -16,12 +16,10 @@ export default function ProdutosPage() {
           </p>
         </div>
 
-        <Link
-          href="/produtos/novo"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-        >
-          <Plus className="h-4 w-4" />
-          Novo Produto
+        <Link href="/produtos/novo">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded">
+            Novo Produto
+          </button>
         </Link>
       </div>
 
