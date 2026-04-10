@@ -21,16 +21,10 @@ export const metadata: Metadata = {
   description: "Plataforma de Controle de Estoque e Vendas",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProviderWrapper>
           <ThemeProvider>{children}</ThemeProvider>
         </SessionProviderWrapper>

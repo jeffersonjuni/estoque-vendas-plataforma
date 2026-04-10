@@ -1,5 +1,7 @@
-import Link from "next/link";
-import { PackageSearch, Plus } from "lucide-react";
+'use client';
+
+import Link from 'next/link';
+import { PackageSearch, Plus } from 'lucide-react';
 
 export function ProductEmptyState() {
   return (

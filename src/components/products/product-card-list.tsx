@@ -1,96 +1,118 @@
-import { Product } from "@/types/product";
+'use client';
 
-type ProductCardListProps = {
+import { Product } from '@/types/product';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { deleteProduct } from '@/services/product/delete-product-client';
+import { Modal } from '@/components/ui/modal';
+import { Button } from '@/components/ui/button';
+
+type Props = {
   products: Product[];
+  reloadProducts: () => Promise<void>;
 };
 
-function getStockStatus(stock: number) {
-  if (stock === 0) {
-    return {
-      label: "Sem estoque",
-      className:
-        "bg-destructive/10 text-destructive border border-destructive/20",
-    };
+export function ProductCardList({ products, reloadProducts }: Props) {
+  const router = useRouter();
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function handleDelete() {
+    if (!selectedId) return;
+
+    await deleteProduct(selectedId);
+
+    setOpenModal(false);
+
+    // ✅ mostra feedback primeiro
+    setMessage('Produto excluído com sucesso!');
+
+    // ✅ espera o usuário ver o toast
+    setTimeout(async () => {
+      await reloadProducts();
+    }, 800);
+
+    // ✅ remove o toast depois
+    setTimeout(() => {
+      setMessage(null);
+    }, 4000);
   }
 
-  if (stock <= 5) {
-    return {
-      label: "Estoque baixo",
-      className:
-        "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20",
-    };
+  function getStockStatus(stock: number) {
+    if (stock === 0)
+      return { label: 'Sem estoque', className: 'bg-red-100 text-red-600' };
+    if (stock <= 5)
+      return {
+        label: 'Estoque baixo',
+        className: 'bg-yellow-100 text-yellow-600',
+      };
+    return { label: 'Em estoque', className: 'bg-green-100 text-green-600' };
   }
 
-  return {
-    label: "Em estoque",
-    className:
-      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20",
-    };
-}
-
-export function ProductCardList({ products }: ProductCardListProps) {
   return (
-    <div className="grid gap-4 md:hidden">
-      {products.map((product) => {
-        const stockStatus = getStockStatus(product.stock);
+    <>
+      {message && (
+        <div className="fixed bottom-4 right-4 z-50 bg-emerald-500 text-white px-4 py-2 rounded-xl shadow">
+          {message}
+        </div>
+      )}
 
-        return (
-          <div
-            key={product.id}
-            className="rounded-2xl border border-border bg-card p-5 shadow-sm"
-          >
-            <div className="mb-4 flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-base font-semibold text-foreground">
-                  {product.name}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {product.description || "Sem descrição"}
-                </p>
-              </div>
+      <div className="grid gap-4 md:hidden">
+        {products.map((product) => {
+          const status = getStockStatus(product.stock);
 
-              <span
-                className={`inline-flex rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${stockStatus.className}`}
-              >
-                {stockStatus.label}
-              </span>
-            </div>
+          return (
+            <div key={product.id} className="rounded-2xl border p-5 space-y-4">
+              <div className="flex justify-between">
+                <div>
+                  <h3>{product.name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {product.description}
+                  </p>
+                </div>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">SKU</span>
-                <span className="font-medium text-foreground">
-                  {product.sku || "—"}
+                <span className={`px-2 py-1 rounded ${status.className}`}>
+                  {status.label}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Categoria</span>
-                <span className="font-medium text-foreground">
-                  {product.category || "—"}
-                </span>
+              <div className="text-sm space-y-1">
+                <div>SKU: {product.sku}</div>
+                <div>Categoria: {product.category}</div>
+                <div>Preço: R$ {product.price}</div>
+                <div>Estoque: {product.stock}</div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Preço</span>
-                <span className="font-medium text-foreground">
-                  {Number(product.price).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </span>
-              </div>
+              <div className="flex gap-2">
+                <Button onClick={() => router.push(`/produtos/${product.id}`)}>
+                  Editar
+                </Button>
 
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Estoque</span>
-                <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
-                  {product.stock}
-                </span>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    setSelectedId(product.id);
+                    setOpenModal(true);
+                  }}
+                >
+                  Excluir
+                </Button>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+
+      <Modal
+        open={openModal}
+        title="Excluir produto"
+        onClose={() => setOpenModal(false)}
+        onConfirm={handleDelete}
+      >
+        <p>Essa ação não pode ser desfeita.</p>
+      </Modal>
+    </>
   );
 }

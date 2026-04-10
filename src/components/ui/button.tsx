@@ -11,6 +11,8 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   fullWidth?: boolean;
 };
 
+
+
 export function Button({
   children,
   variant = 'primary',
@@ -22,7 +24,7 @@ export function Button({
   return (
     <button
       className={clsx(
-        'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98]',
+        'inline-flex items-center justify-center rounded-xl font-medium cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98]',
         {
           'bg-primary text-primary-foreground hover:opacity-90 hover:scale-[1.01] hover:shadow-md':
             variant === 'primary',

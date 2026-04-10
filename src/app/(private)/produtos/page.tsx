@@ -3,6 +3,8 @@ import { Plus } from 'lucide-react';
 
 import { ProductList } from '@/components/products/product-list';
 
+export const revalidate = 0;
+
 export default function ProdutosPage() {
   return (
     <section className="space-y-6">
@@ -17,7 +19,7 @@ export default function ProdutosPage() {
         </div>
 
         <Link href="/produtos/novo">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:opacity-90">
             Novo Produto
           </button>
         </Link>

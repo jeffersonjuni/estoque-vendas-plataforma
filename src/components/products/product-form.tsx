@@ -1,34 +1,39 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { createProduct } from "@/services/product/create-product-client";
-import { createProductSchema } from "@/lib/validations/product"; // 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createProduct } from '@/services/product/create-product-client';
+import { updateProduct } from '@/services/product/update-product-client';
+import { createProductSchema } from '@/lib/validations/product';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
-export function ProductForm() {
+type Props = {
+  product?: any;
+  isEdit?: boolean;
+};
+
+export function ProductForm({ product, isEdit }: Props) {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    name: "",
-    description: "",
-    sku: "",
-    category: "",
-    price: "",
-    stock: "",
+    name: product?.name || '',
+    description: product?.description || '',
+    sku: product?.sku || '',
+    category: product?.category || '',
+    price: product?.price?.toString() || '',
+    stock: product?.stock?.toString() || '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState('');
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
 
-   
     if (errors[e.target.name]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -41,10 +46,10 @@ export function ProductForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (loading) return; 
+    if (loading) return;
 
     setErrors({});
-    setSuccess("");
+    setSuccess('');
 
     const parsed = createProductSchema.safeParse(form);
 
@@ -64,25 +69,27 @@ export function ProductForm() {
     setLoading(true);
 
     try {
-      await createProduct(parsed.data);
+      if (isEdit && product?.id) {
+        await updateProduct(product.id, parsed.data);
+        setSuccess('Produto atualizado com sucesso!');
+      } else {
+        await createProduct(parsed.data);
+        setSuccess('Produto cadastrado com sucesso!');
 
-      setSuccess("Produto cadastrado com sucesso!");
+        // limpa form só no create
+        setForm({
+          name: '',
+          description: '',
+          sku: '',
+          category: '',
+          price: '',
+          stock: '',
+        });
+      }
 
-      // limpa form
-      setForm({
-        name: "",
-        description: "",
-        sku: "",
-        category: "",
-        price: "",
-        stock: "",
-      });
-
-      // redireciona
       setTimeout(() => {
-        router.push("/produtos");
+        router.push('/produtos');
       }, 1200);
-
     } catch (err: any) {
       setErrors({ global: err.message });
     } finally {
@@ -93,14 +100,11 @@ export function ProductForm() {
   return (
     <Card className="p-6 space-y-4 max-w-xl">
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {errors.global && (
           <p className="text-red-500 text-sm">{errors.global}</p>
         )}
 
-        {success && (
-          <p className="text-green-500 text-sm">{success}</p>
-        )}
+        {success && <p className="text-green-500 text-sm">{success}</p>}
 
         <Input
           name="name"
@@ -151,7 +155,11 @@ export function ProductForm() {
         {errors.stock && <p className="text-red-500 text-xs">{errors.stock}</p>}
 
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Salvando..." : "Cadastrar Produto"}
+          {loading
+            ? 'Salvando...'
+            : isEdit
+              ? 'Atualizar Produto'
+              : 'Cadastrar Produto'}
         </Button>
       </form>
     </Card>
