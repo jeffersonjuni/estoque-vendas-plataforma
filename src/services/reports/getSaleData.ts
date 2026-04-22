@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 export async function getSalesData(userId: string, days = 30) {
   const now = new Date();
@@ -18,31 +18,28 @@ export async function getSalesData(userId: string, days = 30) {
       createdAt: true,
     },
     orderBy: {
-      createdAt: "asc",
+      createdAt: 'asc',
     },
   });
 
-  // Agrupar por dia
-  const grouped: Record<
-    string,
-    { revenue: number; sales: number }
-  > = {};
+  // Agrupamento por dia (ISO - padrão correto)
+  const grouped: Record<string, { revenue: number; sales: number }> = {};
 
   sales.forEach((sale) => {
-    const date = sale.createdAt.toISOString().split("T")[0];
+    const dateKey = new Date(sale.createdAt).toISOString().split('T')[0];
 
-    if (!grouped[date]) {
-      grouped[date] = {
+    if (!grouped[dateKey]) {
+      grouped[dateKey] = {
         revenue: 0,
         sales: 0,
       };
     }
 
-    grouped[date].revenue += Number(sale.total);
-    grouped[date].sales += 1;
+    grouped[dateKey].revenue += Number(sale.total);
+    grouped[dateKey].sales += 1;
   });
 
-  // Converter para array
+  // retorno mantém ISO (frontend resolve timezone)
   return Object.entries(grouped).map(([date, data]) => ({
     date,
     revenue: data.revenue,

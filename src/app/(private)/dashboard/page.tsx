@@ -1,10 +1,9 @@
-import { PageUnderConstruction } from "@/components/shared/page-under-construction";
+import { DashboardList } from '@/components/dashboard/dashboard-list';
 
 export default function DashboardPage() {
   return (
-    <PageUnderConstruction
-      title="Dashboard"
-      description="Visão geral da plataforma StockSales."
-    />
+    <div className="space-y-6">
+      <DashboardList />
+    </div>
   );
 }
