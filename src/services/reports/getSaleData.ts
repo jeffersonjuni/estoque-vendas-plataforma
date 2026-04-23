@@ -22,8 +22,7 @@ export async function getSalesData(userId: string, days = 30) {
     },
   });
 
-  // Agrupamento por dia (ISO - padrão correto)
-  const grouped: Record<string, { revenue: number; sales: number }> = {};
+  const grouped: Record<string, { revenue: number; totalSales: number }> = {};
 
   sales.forEach((sale) => {
     const dateKey = new Date(sale.createdAt).toISOString().split('T')[0];
@@ -31,18 +30,17 @@ export async function getSalesData(userId: string, days = 30) {
     if (!grouped[dateKey]) {
       grouped[dateKey] = {
         revenue: 0,
-        sales: 0,
+        totalSales: 0,
       };
     }
 
     grouped[dateKey].revenue += Number(sale.total);
-    grouped[dateKey].sales += 1;
+    grouped[dateKey].totalSales += 1;
   });
 
-  // retorno mantém ISO (frontend resolve timezone)
   return Object.entries(grouped).map(([date, data]) => ({
     date,
     revenue: data.revenue,
-    sales: data.sales,
+    totalSales: data.totalSales,
   }));
 }
