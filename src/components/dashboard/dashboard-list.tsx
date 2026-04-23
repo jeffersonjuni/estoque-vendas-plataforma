@@ -15,17 +15,16 @@ export function DashboardList() {
   const [salesData, setSalesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [days, setDays] = useState(30);
 
-  const [period, setPeriod] = useState(30); // 🔥 novo
-
-  async function loadData(selectedPeriod = period) {
+  async function loadData(selectedDays = days) {
     try {
       setLoading(true);
       setError('');
 
       const [reportData, sales] = await Promise.all([
         getRevenueReportClient(),
-        getSalesDataClient(selectedPeriod),
+        getSalesDataClient(selectedDays),
       ]);
 
       setReport(reportData);
@@ -40,12 +39,7 @@ export function DashboardList() {
 
   useEffect(() => {
     loadData();
-  }, []);
-
-  function handleChangePeriod(days: number) {
-    setPeriod(days);
-    loadData(days);
-  }
+  }, [days]); 
 
   if (loading) return <DashboardLoading />;
 
@@ -63,19 +57,19 @@ export function DashboardList() {
     <div className="space-y-6">
       <DashboardCards data={report} />
 
-      
+      {/* 🔥 FILTRO PADRÃO (igual reports) */}
       <div className="flex gap-2">
-        {[7, 30, 90].map((days) => (
+        {[7, 30, 90].map((d) => (
           <button
-            key={days}
-            onClick={() => handleChangePeriod(days)}
-            className={`px-4 py-2 rounded-xl text-sm border transition ${
-              period === days
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-card hover:bg-muted'
+            key={d}
+            onClick={() => setDays(d)}
+            className={`px-3 py-1 rounded-lg text-sm border transition ${
+              days === d
+                ? 'bg-primary text-white'
+                : 'bg-card border-border text-muted-foreground hover:bg-muted'
             }`}
           >
-            {days} dias
+            {d} dias
           </button>
         ))}
       </div>
