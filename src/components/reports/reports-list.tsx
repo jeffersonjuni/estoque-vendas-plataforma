@@ -6,6 +6,7 @@ import { DollarSign, ShoppingCart } from 'lucide-react';
 import { ReportsLoading } from './reports-loading';
 import { ReportsEmptyState } from './reports-empty-state';
 import { ReportChart } from './report-chart';
+import { ReportExport } from './report-export';
 
 type SalesData = {
   date: string;
@@ -22,6 +23,7 @@ type RevenueReport = {
 export function ReportsList() {
   const [salesData, setSalesData] = useState<SalesData[]>([]);
   const [report, setReport] = useState<RevenueReport | null>(null);
+  const [days, setDays] = useState(30);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -32,7 +34,7 @@ export function ReportsList() {
       setError('');
 
       const [salesRes, reportRes] = await Promise.all([
-        fetch('/api/reports/sales'),
+        fetch(`/api/reports/sales?days=${days}`),
         fetch('/api/reports/revenue'),
       ]);
 
@@ -51,7 +53,7 @@ export function ReportsList() {
 
   useEffect(() => {
     loadReports();
-  }, []);
+  }, [days]);
 
   if (isLoading) return <ReportsLoading />;
 
@@ -67,6 +69,25 @@ export function ReportsList() {
 
   return (
     <div className="space-y-6">
+      
+      <ReportExport days={days} />
+
+      <div className="flex gap-2">
+        {[7, 30, 90].map((d) => (
+          <button
+            key={d}
+            onClick={() => setDays(d)}
+            className={`px-3 py-1 rounded-lg text-sm border transition ${
+              days === d
+                ? 'bg-primary text-white'
+                : 'bg-card border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            {d} dias
+          </button>
+        ))}
+      </div>
+
       {/* CARDS (igual products) */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
