@@ -1,10 +1,16 @@
-import { PageUnderConstruction } from "@/components/shared/page-under-construction";
+import { SettingsForm } from "@/components/settings/settings-form";
 
-export default function ConfiguracoesPage() {
+export default function SettingsPage() {
   return (
-    <PageUnderConstruction
-      title="Configurações"
-      description="Gerencie preferências e configurações da plataforma."
-    />
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">Configurações</h1>
+        <p className="text-sm text-muted-foreground">
+          Gerencie suas informações e segurança da conta.
+        </p>
+      </div>
+
+      <SettingsForm />
+    </div>
   );
 }
