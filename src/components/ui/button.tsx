@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'sm' | 'md' | 'lg' | 'icon' ;
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
@@ -44,6 +44,7 @@ export function Button({
           'h-9 px-3 text-sm': size === 'sm',
           'h-10 px-4 text-sm': size === 'md',
           'h-11 px-6 text-base': size === 'lg',
+          'h-9 w-9 p-0 flex items-center justify-center': size === 'icon',
 
           'w-full sm:w-auto': fullWidth,
         },
