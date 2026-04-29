@@ -25,11 +25,11 @@ export function SaleCart({
   onRemove,
 }: Props) {
   return (
-    <Card className="p-5 space-y-4">
+    <Card className="p-5 space-y-5">
       <h2 className="text-lg font-semibold">Carrinho</h2>
 
       {cart.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground text-center py-6">
           Nenhum item adicionado.
         </p>
       ) : (
@@ -40,11 +40,14 @@ export function SaleCart({
             return (
               <div
                 key={item.productId}
-                className="rounded-xl border border-border p-4 space-y-3"
+                className="rounded-xl border border-border p-4 space-y-3 hover:bg-muted/30 transition"
               >
-                <div className="flex items-start justify-between gap-4">
+                {/* HEADER */}
+                <div className="flex justify-between items-start gap-4">
                   <div>
-                    <h3 className="font-medium">{item.name}</h3>
+                    <h3 className="font-medium text-foreground">
+                      {item.name}
+                    </h3>
 
                     <p className="text-sm text-muted-foreground">
                       {item.quantity}x{' '}
@@ -64,36 +67,39 @@ export function SaleCart({
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => onDecrease(item.productId)}
-                  >
-                    -
-                  </Button>
+                {/* CONTROLES */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => onDecrease(item.productId)}
+                    >
+                      -
+                    </Button>
 
-                  <span className="min-w-[30px] text-center font-medium">
-                    {item.quantity}
+                    <span className="min-w-[32px] text-center font-medium">
+                      {item.quantity}
+                    </span>
+
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => onIncrease(item.productId)}
+                      disabled={item.quantity >= item.stock}
+                    >
+                      +
+                    </Button>
+                  </div>
+
+                  {/* SUBTOTAL */}
+                  <span className="text-sm font-semibold text-primary">
+                    {subtotal.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
                   </span>
-
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => onIncrease(item.productId)}
-                    disabled={item.quantity >= item.stock}
-                  >
-                    +
-                  </Button>
                 </div>
-
-                <p className="text-sm font-semibold text-primary">
-                  Subtotal:{' '}
-                  {subtotal.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  })}
-                </p>
               </div>
             );
           })}

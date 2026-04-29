@@ -19,17 +19,31 @@ type Props = {
 
 export function ReportChart({ data }: Props) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-      <h3 className="mb-4 text-sm text-muted-foreground">
-        Receita ao longo do tempo
-      </h3>
+    <div className="rounded-2xl border bg-card p-6 shadow-sm">
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold">
+          Visão de Receita
+        </h2>
+
+        <p className="text-sm text-muted-foreground">
+          Acompanhe o desempenho ao longo do tempo
+        </p>
+      </div>
 
       <div className="h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#888" />
+            
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 12 }}
+              stroke="var(--muted-foreground)"
+            />
 
-            <YAxis tick={{ fontSize: 12 }} stroke="#888" />
+            <YAxis
+              tick={{ fontSize: 12 }}
+              stroke="var(--muted-foreground)"
+            />
 
             <Tooltip
               contentStyle={{
@@ -37,10 +51,12 @@ export function ReportChart({ data }: Props) {
                 border: '1px solid var(--border)',
                 borderRadius: '12px',
               }}
-              formatter={(value, name) => {
+              formatter={(value: unknown, name: unknown) => {
                 const num = Number(value);
 
-                if (isNaN(num)) return value;
+                if (isNaN(num)) {
+                  return [String(value), String(name)];
+                }
 
                 const labelMap: Record<string, string> = {
                   revenue: 'Receita',
@@ -52,7 +68,7 @@ export function ReportChart({ data }: Props) {
                     style: 'currency',
                     currency: 'BRL',
                   }),
-                  labelMap[name as string] || name,
+                  labelMap[String(name)] || String(name),
                 ];
               }}
             />
@@ -60,8 +76,8 @@ export function ReportChart({ data }: Props) {
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#10b981"
-              fill="#10b981"
+              stroke="var(--primary)"   // ✅ IGUAL DASHBOARD
+              fill="var(--primary)"     // ✅ IGUAL DASHBOARD
               fillOpacity={0.1}
             />
           </AreaChart>

@@ -26,15 +26,15 @@ export function ProductCardList({ products, reloadProducts }: Props) {
 
     setOpenModal(false);
 
-    // ✅ mostra feedback primeiro
+    // mostra feedback primeiro
     setMessage('Produto excluído com sucesso!');
 
-    // ✅ espera o usuário ver o toast
+    // espera o usuário ver o toast
     setTimeout(async () => {
       await reloadProducts();
     }, 800);
 
-    // ✅ remove o toast depois
+    //  remove o toast depois
     setTimeout(() => {
       setMessage(null);
     }, 4000);
@@ -64,33 +64,52 @@ export function ProductCardList({ products, reloadProducts }: Props) {
           const status = getStockStatus(product.stock);
 
           return (
-            <div key={product.id} className="rounded-2xl border p-5 space-y-4">
-              <div className="flex justify-between">
+            <div
+              key={product.id}
+              className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div className="flex justify-between items-start gap-2">
                 <div>
-                  <h3>{product.name}</h3>
+                  <h3 className="font-semibold text-foreground">
+                    {product.name}
+                  </h3>
                   <p className="text-sm text-muted-foreground">
-                    {product.description}
+                    {product.description || 'Sem descrição'}
                   </p>
                 </div>
 
-                <span className={`px-2 py-1 rounded ${status.className}`}>
+                <span
+                  className={`px-2 py-1 text-xs rounded ${status.className}`}
+                >
                   {status.label}
                 </span>
               </div>
 
-              <div className="text-sm space-y-1">
-                <div>SKU: {product.sku}</div>
-                <div>Categoria: {product.category}</div>
-                <div>Preço: R$ {product.price}</div>
+              <div className="text-sm space-y-1 text-muted-foreground">
+                <div>SKU: {product.sku || '—'}</div>
+                <div>Categoria: {product.category || '—'}</div>
+                <div>
+                  Preço:{' '}
+                  <span className="text-foreground font-medium">
+                    {Number(product.price).toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </span>
+                </div>
                 <div>Estoque: {product.stock}</div>
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={() => router.push(`/produtos/${product.id}`)}>
+                <Button
+                  size="sm"
+                  onClick={() => router.push(`/produtos/${product.id}`)}
+                >
                   Editar
                 </Button>
 
                 <Button
+                  size="sm"
                   variant="danger"
                   onClick={() => {
                     setSelectedId(product.id);

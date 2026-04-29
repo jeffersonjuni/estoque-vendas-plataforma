@@ -14,32 +14,54 @@ export function DashboardList() {
   const [report, setReport] = useState<any>(null);
   const [salesData, setSalesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false);
   const [error, setError] = useState('');
   const [days, setDays] = useState(30);
 
-  async function loadData(selectedDays = days) {
+  async function loadInitialData() {
     try {
       setLoading(true);
       setError('');
 
       const [reportData, sales] = await Promise.all([
         getRevenueReportClient(),
-        getSalesDataClient(selectedDays),
+        getSalesDataClient(days),
       ]);
 
       setReport(reportData);
       setSalesData(sales);
     } catch (err) {
       console.error(err);
-      setError('Erro ao carregar dashboard');
+      setError('Não foi possível carregar o dashboard.');
     } finally {
       setLoading(false);
     }
   }
 
+  async function loadFilteredData(selectedDays: number) {
+    try {
+      setFilterLoading(true);
+
+      const sales = await getSalesDataClient(selectedDays);
+
+      setSalesData(sales);
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao atualizar os dados.');
+    } finally {
+      setFilterLoading(false);
+    }
+  }
+
+  // 🔹 load inicial (uma vez)
   useEffect(() => {
-    loadData();
-  }, [days]); 
+    loadInitialData();
+  }, []);
+
+  // 🔹 load ao mudar filtro
+  useEffect(() => {
+    loadFilteredData(days);
+  }, [days]);
 
   if (loading) return <DashboardLoading />;
 
@@ -57,24 +79,28 @@ export function DashboardList() {
     <div className="space-y-6">
       <DashboardCards data={report} />
 
-      {/* 🔥 FILTRO PADRÃO (igual reports) */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {[7, 30, 90].map((d) => (
           <button
             key={d}
             onClick={() => setDays(d)}
-            className={`px-3 py-1 rounded-lg text-sm border transition ${
+            disabled={filterLoading}
+            className={`px-3 py-1.5 rounded-lg text-sm border transition-all duration-200 ${
               days === d
                 ? 'bg-primary text-white'
                 : 'bg-card border-border text-muted-foreground hover:bg-muted'
-            }`}
+            } ${filterLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {d} dias
           </button>
         ))}
       </div>
 
-      <DashboardChart data={salesData} />
+      {filterLoading ? (
+        <DashboardLoading />
+      ) : (
+        <DashboardChart data={salesData} />
+      )}
     </div>
   );
 }

@@ -25,6 +25,7 @@ export function StockMovementModal({
   const [quantity, setQuantity] = useState('')
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit() {
     setError('')
@@ -44,31 +45,37 @@ export function StockMovementModal({
         ? '/api/stock/add'
         : '/api/stock/remove'
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        productId: product.id,
-        quantity: Number(quantity),
-        reason,
-      }),
-    })
+    try {
+      setLoading(true)
 
-    if (!response.ok) {
-      const data = await response.json()
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: Number(quantity),
+          reason,
+        }),
+      })
 
-      setError(
-        data.error ||
-          'Erro ao realizar movimentação.'
-      )
+      if (!response.ok) {
+        const data = await response.json()
 
-      return
+        setError(
+          data.error || 'Erro ao realizar movimentação.'
+        )
+        return
+      }
+
+      await onSuccess()
+      onClose()
+    } catch (err) {
+      setError('Erro inesperado. Tente novamente.')
+    } finally {
+      setLoading(false)
     }
-
-    await onSuccess()
-    onClose()
   }
 
   return (
@@ -81,43 +88,65 @@ export function StockMovementModal({
           : 'Saída de Estoque'
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
+
+        {/* PRODUTO */}
         <div>
           <p className="text-sm text-muted-foreground">
             Produto selecionado
           </p>
-
-          <p className="font-medium">{product.name}</p>
+          <p className="font-medium text-foreground">
+            {product.name}
+          </p>
         </div>
 
-        <Input
-          type="number"
-          placeholder="Quantidade"
-          value={quantity}
-          onChange={(e) =>
-            setQuantity(e.target.value)
-          }
-        />
+        {/* QUANTIDADE */}
+        <div className="space-y-2">
+          <p className="text-sm text-muted-foreground">
+            Quantidade
+          </p>
+          <Input
+            type="number"
+            placeholder="Ex: 10"
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(e.target.value)
+            }
+          />
+        </div>
 
-        <Input
-          placeholder="Motivo da movimentação"
-          value={reason}
-          onChange={(e) =>
-            setReason(e.target.value)
-          }
-        />
+        {/* MOTIVO */}
+        <div className="space-y-2">
+          <p className="text-sm text-muted-foreground">
+            Motivo
+          </p>
+          <Input
+            placeholder="Ex: Reposição, venda, ajuste..."
+            value={reason}
+            onChange={(e) =>
+              setReason(e.target.value)
+            }
+          />
+        </div>
 
+        {/* ERRO */}
         {error && (
           <p className="text-sm text-destructive">
             {error}
           </p>
         )}
 
+        {/* BOTÃO */}
         <Button
           className="w-full"
           onClick={handleSubmit}
+          disabled={loading}
         >
-          Confirmar
+          {loading
+            ? 'Processando...'
+            : type === 'IN'
+              ? 'Confirmar entrada'
+              : 'Confirmar saída'}
         </Button>
       </div>
     </Modal>

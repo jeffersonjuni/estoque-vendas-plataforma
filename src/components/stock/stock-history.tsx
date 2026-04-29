@@ -24,7 +24,10 @@ export function StockHistory({ history }: StockHistoryProps) {
       {/* MOBILE */}
       <div className="grid gap-4 md:hidden">
         {history.map((movement) => (
-          <div key={movement.id} className="rounded-2xl border p-5 space-y-3">
+          <div
+            key={movement.id}
+            className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3"
+          >
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <p className="font-medium">{movement.product.name}</p>
@@ -34,7 +37,9 @@ export function StockHistory({ history }: StockHistoryProps) {
                 </Badge>
               </div>
 
-              <p className="text-sm">Quantidade: {movement.quantity}</p>
+              <p className="text-sm font-medium">
+                Quantidade: {movement.quantity}
+              </p>
 
               <p className="text-sm text-muted-foreground">
                 {movement.reason || 'Sem motivo informado'}
@@ -68,7 +73,10 @@ export function StockHistory({ history }: StockHistoryProps) {
 
             <tbody>
               {history.map((movement) => (
-                <tr key={movement.id} className="border-b border-border">
+                <tr
+                  key={movement.id}
+                  className="border-b border-border hover:bg-muted/30 transition-colors"
+                >
                   <td className="px-6 py-4">{movement.product.name}</td>
 
                   <td className="px-6 py-4 text-center">
@@ -79,7 +87,9 @@ export function StockHistory({ history }: StockHistoryProps) {
                     </Badge>
                   </td>
 
-                  <td className="px-6 py-4 text-center">{movement.quantity}</td>
+                  <td className="px-6 py-4 text-center font-medium">
+                    {movement.quantity}
+                  </td>
 
                   <td className="px-6 py-4">{movement.reason || '—'}</td>
 

@@ -76,7 +76,6 @@ export function ProductForm({ product, isEdit }: Props) {
         await createProduct(parsed.data);
         setSuccess('Produto cadastrado com sucesso!');
 
-        // limpa form só no create
         setForm({
           name: '',
           description: '',
@@ -98,68 +97,84 @@ export function ProductForm({ product, isEdit }: Props) {
   }
 
   return (
-    <Card className="p-6 space-y-4 max-w-xl">
+    <Card className="p-6 space-y-6 max-w-xl">
       <form onSubmit={handleSubmit} className="space-y-4">
         {errors.global && (
-          <p className="text-red-500 text-sm">{errors.global}</p>
+          <p className="text-sm text-destructive">{errors.global}</p>
         )}
 
-        {success && <p className="text-green-500 text-sm">{success}</p>}
+        {success && <p className="text-sm text-emerald-600">{success}</p>}
 
-        <Input
-          name="name"
-          placeholder="Nome do produto"
-          value={form.name}
-          onChange={handleChange}
-        />
-        {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+        {/* Nome */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Nome</label>
+          <Input name="name" value={form.name} onChange={handleChange} />
+          {errors.name && (
+            <p className="text-xs text-destructive">{errors.name}</p>
+          )}
+        </div>
 
-        <Input
-          name="description"
-          placeholder="Descrição"
-          value={form.description}
-          onChange={handleChange}
-        />
+        {/* Descrição */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Descrição</label>
+          <Input
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+          />
+        </div>
 
-        <Input
-          name="sku"
-          placeholder="SKU"
-          value={form.sku}
-          onChange={handleChange}
-        />
+        {/* SKU */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium">SKU</label>
+          <Input name="sku" value={form.sku} onChange={handleChange} />
+        </div>
 
-        <Input
-          name="category"
-          placeholder="Categoria"
-          value={form.category}
-          onChange={handleChange}
-        />
+        {/* Categoria */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Categoria</label>
+          <Input
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+          />
+        </div>
 
-        <Input
-          name="price"
-          type="number"
-          step="0.01"
-          placeholder="Preço"
-          value={form.price}
-          onChange={handleChange}
-        />
-        {errors.price && <p className="text-red-500 text-xs">{errors.price}</p>}
+        {/* Preço */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Preço</label>
+          <Input
+            name="price"
+            type="number"
+            step="0.01"
+            value={form.price}
+            onChange={handleChange}
+          />
+          {errors.price && (
+            <p className="text-xs text-destructive">{errors.price}</p>
+          )}
+        </div>
 
-        <Input
-          name="stock"
-          type="number"
-          placeholder="Estoque"
-          value={form.stock}
-          onChange={handleChange}
-        />
-        {errors.stock && <p className="text-red-500 text-xs">{errors.stock}</p>}
+        {/* Estoque */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Estoque</label>
+          <Input
+            name="stock"
+            type="number"
+            value={form.stock}
+            onChange={handleChange}
+          />
+          {errors.stock && (
+            <p className="text-xs text-destructive">{errors.stock}</p>
+          )}
+        </div>
 
         <Button type="submit" disabled={loading} className="w-full">
           {loading
             ? 'Salvando...'
             : isEdit
-              ? 'Atualizar Produto'
-              : 'Cadastrar Produto'}
+              ? 'Atualizar produto'
+              : 'Cadastrar produto'}
         </Button>
       </form>
     </Card>

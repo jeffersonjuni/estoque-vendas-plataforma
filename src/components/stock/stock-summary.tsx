@@ -37,7 +37,7 @@ export function StockSummary({
           <Boxes className="h-5 w-5 text-muted-foreground" />
         </div>
 
-        <strong className="text-2xl font-bold">
+        <strong className="text-2xl font-bold text-foreground">
           {totalProducts}
         </strong>
       </div>
@@ -51,7 +51,7 @@ export function StockSummary({
           <ArrowUpCircle className="h-5 w-5 text-muted-foreground" />
         </div>
 
-        <strong className="text-2xl font-bold">
+        <strong className="text-2xl font-bold text-foreground">
           {totalStock}
         </strong>
       </div>
@@ -65,7 +65,7 @@ export function StockSummary({
           <ArrowDownCircle className="h-5 w-5 text-muted-foreground" />
         </div>
 
-        <strong className="text-2xl font-bold">
+        <strong className="text-2xl font-bold text-foreground">
           {totalMovements}
         </strong>
       </div>

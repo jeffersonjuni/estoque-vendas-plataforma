@@ -165,7 +165,12 @@ export function SalesPage() {
         </div>
       )}
 
-      <h1 className="text-2xl font-bold">Vendas</h1>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Vendas</h1>
+        <p className="text-sm text-muted-foreground">
+          Gerencie suas vendas e finalize pedidos
+        </p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <div className="mb-3 flex justify-between">

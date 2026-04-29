@@ -69,18 +69,19 @@ export function ReportsList() {
 
   return (
     <div className="space-y-6">
-      
+      {/* HEADER */}
       <ReportExport days={days} />
 
+      {/* FILTRO */}
       <div className="flex gap-2">
         {[7, 30, 90].map((d) => (
           <button
             key={d}
             onClick={() => setDays(d)}
-            className={`px-3 py-1 rounded-lg text-sm border transition ${
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
               days === d
                 ? 'bg-primary text-white'
-                : 'bg-card border-border text-muted-foreground hover:bg-muted'
+                : 'bg-card border border-border text-muted-foreground hover:bg-muted'
             }`}
           >
             {d} dias
@@ -88,11 +89,13 @@ export function ReportsList() {
         ))}
       </div>
 
-      {/* CARDS (igual products) */}
+      {/* CARDS (PADRÃO DASHBOARD) */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <div className="mb-3 flex justify-between">
-            <span className="text-sm text-muted-foreground">Receita total</span>
+            <span className="text-sm text-muted-foreground">
+              Receita total
+            </span>
             <DollarSign className="h-5 w-5 text-muted-foreground" />
           </div>
 
@@ -106,11 +109,15 @@ export function ReportsList() {
 
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <div className="mb-3 flex justify-between">
-            <span className="text-sm text-muted-foreground">Vendas totais</span>
+            <span className="text-sm text-muted-foreground">
+              Vendas totais
+            </span>
             <ShoppingCart className="h-5 w-5 text-muted-foreground" />
           </div>
 
-          <strong className="text-2xl font-bold">{report?.totalSales}</strong>
+          <strong className="text-2xl font-bold">
+            {report?.totalSales || 0}
+          </strong>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
@@ -122,14 +129,15 @@ export function ReportsList() {
           </div>
 
           <strong className="text-2xl font-bold">
-            {report?.monthlyRevenue.toLocaleString('pt-BR', {
+            {report?.monthlyRevenue?.toLocaleString('pt-BR', {
               style: 'currency',
               currency: 'BRL',
-            })}
+            }) || 'R$ 0,00'}
           </strong>
         </div>
       </div>
 
+      {/* CHART */}
       <ReportChart data={salesData} />
     </div>
   );

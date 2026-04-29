@@ -19,17 +19,24 @@ type Props = {
 
 export function DashboardChart({ data }: Props) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-      <h3 className="mb-4 text-sm text-muted-foreground">
-        Receita ao longo do tempo
-      </h3>
+    <div className="rounded-2xl border bg-card p-6 shadow-sm">
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold">Visão de Receita</h2>
+        <p className="text-sm text-muted-foreground">
+          Acompanhe o desempenho ao longo do tempo
+        </p>
+      </div>
 
-      <div className="h-72 w-full min-w-0">
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+      <div className="h-72 w-full">
+        <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#888" />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 12 }}
+              stroke="var(--muted-foreground)"
+            />
 
-            <YAxis tick={{ fontSize: 12 }} stroke="#888" />
+            <YAxis tick={{ fontSize: 12 }} stroke="var(--muted-foreground)" />
 
             <Tooltip
               contentStyle={{
@@ -60,8 +67,8 @@ export function DashboardChart({ data }: Props) {
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#10b981"
-              fill="#10b981"
+              stroke="var(--primary)"
+              fill="var(--primary)"
               fillOpacity={0.1}
             />
           </AreaChart>

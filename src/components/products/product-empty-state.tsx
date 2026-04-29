@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { PackageSearch, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function ProductEmptyState() {
   return (
@@ -19,12 +20,11 @@ export function ProductEmptyState() {
         produto para começar a gerenciar seu estoque.
       </p>
 
-      <Link
-        href="/produtos/novo"
-        className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-      >
-        <Plus className="h-4 w-4" />
-        Cadastrar produto
+      <Link href="/produtos/novo" className="mt-6">
+        <Button>
+          <Plus className="h-4 w-4" />
+          Cadastrar produto
+        </Button>
       </Link>
     </div>
   );

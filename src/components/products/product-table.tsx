@@ -26,10 +26,8 @@ export function ProductTable({ products, reloadProducts }: Props) {
 
     setOpenModal(false);
 
-    
     setMessage('Produto excluído com sucesso!');
 
-    
     setTimeout(async () => {
       await reloadProducts();
     }, 800);
@@ -99,8 +97,10 @@ export function ProductTable({ products, reloadProducts }: Props) {
                 <th className="px-6 py-4 font-medium text-muted-foreground text-center">
                   Criado
                 </th>
-                <th className="px-6 py-4 font-medium text-muted-foreground text-right">
-                  Ações
+                <th className="px-6 py-4">
+                  <div className="flex w-full justify-end text-muted-foreground font-medium">
+                    Ações
+                  </div>
                 </th>
               </tr>
             </thead>

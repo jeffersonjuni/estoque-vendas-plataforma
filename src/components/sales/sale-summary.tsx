@@ -17,18 +17,18 @@ export function SaleSummary({
   loading,
 }: Props) {
   return (
-    <Card className="p-5 space-y-4">
+    <Card className="p-5 space-y-5">
       <h2 className="text-lg font-semibold">Resumo da Venda</h2>
 
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span>Itens:</span>
+      <div className="space-y-3 text-sm">
+        <div className="flex justify-between text-muted-foreground">
+          <span>Itens</span>
           <span>{totalItems}</span>
         </div>
 
-        <div className="flex justify-between font-semibold text-base">
-          <span>Total:</span>
-          <span>
+        <div className="flex justify-between font-semibold text-base border-t pt-3">
+          <span>Total</span>
+          <span className="text-primary">
             {totalValue.toLocaleString('pt-BR', {
               style: 'currency',
               currency: 'BRL',
