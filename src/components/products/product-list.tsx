@@ -10,11 +10,13 @@ import { ProductCardList } from './product-card-list';
 import { ProductEmptyState } from './product-empty-state';
 import { ProductLoading } from './product-loading';
 import { ProductTable } from './product-table';
+import { SearchInput } from '@/components/ui/search-input';
 
 export function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
 
   async function loadProducts() {
     try {
@@ -35,17 +37,30 @@ export function ProductList() {
     loadProducts();
   }, []);
 
-  const totalProducts = products.length;
+  // 🔍 FILTRO GLOBAL
+  const filteredProducts = useMemo(() => {
+    const term = search.toLowerCase();
+
+    return products.filter((product) => {
+      return (
+        product.name.toLowerCase().includes(term) ||
+        product.category?.toLowerCase().includes(term) ||
+        product.sku?.toLowerCase().includes(term)
+      );
+    });
+  }, [products, search]);
+
+  const totalProducts = filteredProducts.length;
 
   const totalStock = useMemo(() => {
-    return products.reduce((acc, product) => acc + product.stock, 0);
-  }, [products]);
+    return filteredProducts.reduce((acc, product) => acc + product.stock, 0);
+  }, [filteredProducts]);
 
   const totalStockValue = useMemo(() => {
-    return products.reduce((acc, product) => {
+    return filteredProducts.reduce((acc, product) => {
       return acc + Number(product.price) * product.stock;
     }, 0);
-  }, [products]);
+  }, [filteredProducts]);
 
   if (isLoading) return <ProductLoading />;
 
@@ -57,10 +72,21 @@ export function ProductList() {
     );
   }
 
-  if (products.length === 0) return <ProductEmptyState />;
+ if (filteredProducts.length === 0) return <ProductEmptyState />;
 
   return (
     <div className="space-y-6">
+      {/* 🔍 SEARCH */}
+      <div className="flex justify-between items-center flex-wrap gap-3">
+        <h1 className="text-2xl font-bold">Produtos</h1>
+
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Buscar por nome, SKU ou categoria..."
+        />
+      </div>
+
       {/* CARDS */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
@@ -99,9 +125,16 @@ export function ProductList() {
         </div>
       </div>
 
-      {/* LISTAS */}
-      <ProductCardList products={products} reloadProducts={loadProducts} />
-      <ProductTable products={products} reloadProducts={loadProducts} />
+      {/* LISTAS FILTRADAS */}
+      <ProductCardList
+        products={filteredProducts}
+        reloadProducts={loadProducts}
+      />
+
+      <ProductTable
+        products={filteredProducts}
+        reloadProducts={loadProducts}
+      />
     </div>
   );
 }

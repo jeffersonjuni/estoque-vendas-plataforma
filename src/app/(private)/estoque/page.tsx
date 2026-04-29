@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { SearchInput } from '@/components/ui/search-input';
 
 import { StockSummary } from '@/components/stock/stock-summary';
 import { StockTable } from '@/components/stock/stock-table';
@@ -27,6 +29,10 @@ export default function EstoquePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [history, setHistory] = useState<Movement[]>([]);
 
+  // 🔎 SEARCH STATES
+  const [searchProduct, setSearchProduct] = useState('');
+  const [searchHistory, setSearchHistory] = useState('');
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -44,13 +50,41 @@ export default function EstoquePage() {
     setHistory(Array.isArray(historyData.data) ? historyData.data : []);
   }
 
+  // 🔎 FILTRO PRODUTOS
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(searchProduct.toLowerCase())
+    );
+  }, [products, searchProduct]);
+
+  // 🔎 FILTRO HISTÓRICO
+  const filteredHistory = useMemo(() => {
+    return history.filter((item) =>
+      item.product.name.toLowerCase().includes(searchHistory.toLowerCase())
+    );
+  }, [history, searchHistory]);
+
   return (
     <div className="space-y-6">
       <StockSummary products={products} history={history} />
 
-      <StockTable products={products} onRefresh={fetchData} />
+      {/* 🔎 SEARCH PRODUTOS */}
+      <SearchInput
+        value={searchProduct}
+        onChange={setSearchProduct}
+        placeholder="Buscar produto no estoque..."
+      />
 
-      <StockHistory history={history} />
+      <StockTable products={filteredProducts} onRefresh={fetchData} />
+
+      {/* 🔎 SEARCH HISTÓRICO */}
+      <SearchInput
+        value={searchHistory}
+        onChange={setSearchHistory}
+        placeholder="Buscar no histórico..."
+      />
+
+      <StockHistory history={filteredHistory} />
     </div>
   );
 }
