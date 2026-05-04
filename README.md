@@ -1,7 +1,9 @@
 # 🚀 StockSales — Plataforma de Controle de Estoque e Vendas
 
-Sistema full stack para gerenciamento de produtos, estoque, vendas e relatórios, desenvolvido com foco em performance, escalabilidade e experiência do usuário.
+![version](https://img.shields.io/badge/version-1.0.0-blue)
+![status](https://img.shields.io/badge/status-production-green)
 
+Sistema full stack para gerenciamento de produtos, estoque, vendas e relatórios.
 ---
 
 ## 📌 Sobre o projeto
