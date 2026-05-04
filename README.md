@@ -1,36 +1,214 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 StockSales — Plataforma de Controle de Estoque e Vendas
 
-## Getting Started
+Sistema full stack para gerenciamento de produtos, estoque, vendas e relatórios, desenvolvido com foco em performance, escalabilidade e experiência do usuário.
 
-First, run the development server:
+---
 
+## 📌 Sobre o projeto
+
+O **StockSales** é uma aplicação que simula um sistema real de controle de estoque e vendas, incluindo autenticação, dashboard analítico e exportação de relatórios.
+
+O projeto foi construído seguindo boas práticas de arquitetura, separação de responsabilidades e componentização, com uma estrutura escalável e pronta para produção.
+
+---
+
+## ✨ Funcionalidades
+
+### 🔐 Autenticação
+- Login com e-mail e senha  
+- Registro de usuários  
+- Sessão persistente com JWT  
+- Proteção de rotas privadas  
+- Validação de senha forte  
+
+---
+
+### 📦 Produtos
+- CRUD completo de produtos  
+- Listagem responsiva (tabela + cards)  
+- Atualização em tempo real  
+- Feedback visual com toasts e modais  
+
+---
+
+### 📊 Estoque
+- Entrada e saída de produtos  
+- Validação de estoque  
+- Histórico de movimentações  
+- Interface responsiva  
+
+---
+
+### 💰 Vendas
+- Carrinho de compras funcional  
+- Controle automático de estoque  
+- Registro de vendas  
+- Cálculo automático de totais  
+
+---
+
+### 📈 Dashboard
+- Visualização de faturamento  
+- Gráficos interativos (padrão SaaS)  
+- Filtros por período  
+- Métricas em tempo real  
+
+---
+
+### 📄 Relatórios
+- Exportação em CSV e PDF  
+- Filtro por período  
+- Dados consistentes com dashboard  
+
+---
+
+### ⚙️ Configurações
+- Atualização de perfil  
+- Alteração de senha  
+- Validações de segurança  
+
+---
+
+### 🔔 Alertas
+- Notificação de estoque baixo  
+- Atualização automática  
+- Badge de alerta no header  
+
+---
+
+## 🛠️ Tecnologias
+
+### Frontend
+- Next.js (App Router)  
+- React  
+- TypeScript  
+- Tailwind CSS  
+
+### Backend
+- API Routes (Next.js - Serverless)  
+- Prisma ORM  
+- NextAuth  
+
+### Banco de dados
+- MySQL  
+
+---
+
+## 🧱 Arquitetura
+
+- Separação por camadas:
+  - `services`
+  - `components`
+  - `hooks`
+  - `utils`
+- API desacoplada do frontend  
+- Prisma como camada de acesso a dados  
+- Componentização reutilizável  
+- Estrutura escalável e organizada  
+
+---
+
+## ⚙️ Como rodar o projeto localmente
+
+### 1. Clonar o repositório
+```bash
+git clone https://github.com/jeffersonjuni/estoque-vendas-plataforma
+cd estoque-vendas-plataforma
+```
+### 2. Instalar dependências
+```bash
+npm install
+```
+### 3. Configurar variáveis de ambiente
+Crie um arquivo .env:
+```bash
+DATABASE_URL="mysql://user:password@localhost:3306/database"
+NEXTAUTH_SECRET="sua_secret"
+NEXTAUTH_URL="http://localhost:3000"
+```
+### 4. Subir o banco com Docker
+```bash
+docker-compose up -d
+```
+### 5. Rodar migrations
+```bash
+npx prisma migrate dev
+```
+### 6. Iniciar aplicação
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Deploy (Produção)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A aplicação está preparada para rodar em ambiente real com arquitetura serverless.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🔹Infraestrutura
+- Frontend + Backend: Vercel 
+- Banco de dados: Railway (MySQL)
+  
+🔹Banco de Dados
+- Banco MySQL provisionado na Railway
+- Conexão remota via `DATABASE_URL`
+```bash
+npx prisma migrate deploy
+```
+---
 
-## Learn More
+🔹Backend
+- API Routes do Next.js rodando como serverless
+- Integração direta com banco em produção
+- Suporte completo a:
+  - `autenticação`
+  - `produtos`
+  - `estoque`
+  - `vendas`
+  - `relatórios`
+---
 
-To learn more about Next.js, take a look at the following resources:
+🔹 Frontend
+- Deploy via Vercel
+- Integração com GitHub (CI/CD automático)
+- Build otimizado para produção
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🔹 Variáveis de Ambiente (Vercel)
+  ```bash
+DATABASE_URL=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+```
+- Separação entre ambiente local e produção
+- Configuração segura para autenticação
+---
 
-## Deploy on Vercel
+🔹 Testes em Produção
+- Autenticação (login/registro/logout)
+- CRUD de produtos
+- Movimentação de estoque
+- Vendas com atualização automática
+- Dashboard e relatórios
+- Exportação (CSV/PDF)
+- Alertas de estoque
+- Configurações de usuário
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Estrutura do projeto
+ ```bash
+src/
+ ├── app/
+ ├── components/
+ ├── services/
+ ├── hooks/
+ ├── utils/
+ ├── styles/
+ └── types/
+```
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👨‍💻 Autor
+Jefferson Junior
+
+
